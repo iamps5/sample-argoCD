@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-test-app
+  namespace: argocd-test
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/iamps5/sample-argoCD.git
+    targetRevision: HEAD
+    path: 
+  destination: 
+    server: https://kubernetes.default.svc
+    namespace: argocd-test
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true                      # create namespace, if the mentioned ns is not created
+    automated:
+      selfHeal: true                 # If some make manual changes in the cluster, argoCD will sync back to git repo
+      prune: true                    # in case, deployment delete or name chaged in git, argoCD will remove old resources 
+                                     # & create new resource if required
